@@ -1,13 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.directusApiFileRequest = exports.directusApiAssetRequest = exports.validateJSON = exports.directusApiRequestAllItems = exports.directusApiRequest = void 0;
-const n8n_workflow_1 = require("n8n-workflow");
+exports.directusApiFileRequest = exports.directusApiAssetRequest = exports.validateJSON = exports.directusApiRequest = void 0;
 async function directusApiRequest(method, path, body = {}, qs = {}, uri, option = {}) {
     // tslint:disable-line:no-any
     const credentials = (await this.getCredentials('directusApi'));
     console.log('2. credentials : ', { credentials });
     if (credentials === undefined) {
-        throw new n8n_workflow_1.NodeOperationError(this.getNode(), 'No credentials got returned!');
+        /*
+        throw new NodeOperationError(
+            this.getNode(),
+            'No credentials got returned!'
+        );
+        */
+        throw new Error('No credentials got returned!');
     }
     const params = credentials;
     const url = params.url.replace(/\/$/, '') || null;
@@ -28,17 +33,11 @@ async function directusApiRequest(method, path, body = {}, qs = {}, uri, option 
         return await this.helpers.request(options);
     }
     catch (error) {
-        throw new n8n_workflow_1.NodeApiError(this.getNode(), error);
+        //throw new NodeApiError(this.getNode(), error);
+        throw new Error(error);
     }
 }
 exports.directusApiRequest = directusApiRequest;
-async function directusApiRequestAllItems(propertyName, method, resource, body = {}, query = {}) {
-    // tslint:disable-line:no-any
-    const returnData = [];
-    let responseData;
-    query.page = 0;
-}
-exports.directusApiRequestAllItems = directusApiRequestAllItems;
 function validateJSON(json) {
     // tslint:disable-line:no-any
     let result;
@@ -55,7 +54,13 @@ async function directusApiAssetRequest(method, path, ID, dataPropertyName, qs = 
     // tslint:disable-line:no-any
     const credentials = (await this.getCredentials('directusApi'));
     if (credentials === undefined) {
-        throw new n8n_workflow_1.NodeOperationError(this.getNode(), 'No credentials got returned!');
+        /*
+        throw new NodeOperationError(
+            this.getNode(),
+            'No credentials got returned!'
+        );
+        */
+        throw new Error('No credentials got returned!');
     }
     const params = credentials;
     const url = params.url.replace(/\/$/, '') || null;
@@ -80,7 +85,7 @@ async function directusApiAssetRequest(method, path, ID, dataPropertyName, qs = 
         qs,
         uri: `${url}/${path.replace(/^\//, '')}`,
         json: true,
-        encoding: null, //"arrayBuffer",
+        encoding: "arrayBuffer",
     };
     console.log('4. optionsAsset : ', { optionsAsset });
     try {
@@ -99,7 +104,8 @@ async function directusApiAssetRequest(method, path, ID, dataPropertyName, qs = 
         return result;
     }
     catch (error) {
-        throw new n8n_workflow_1.NodeApiError(this.getNode(), error);
+        //throw new NodeApiError(this.getNode(), error);
+        throw new Error(error);
     }
 }
 exports.directusApiAssetRequest = directusApiAssetRequest;
@@ -109,7 +115,13 @@ async function directusApiFileRequest(method, path, formData = {}, body = {}, qs
     var _a, _b;
     const credentials = (await this.getCredentials('directusApi'));
     if (credentials === undefined) {
-        throw new n8n_workflow_1.NodeOperationError(this.getNode(), 'No credentials got returned!');
+        /*
+        throw new NodeOperationError(
+            this.getNode(),
+            'No credentials got returned!'
+        );
+        */
+        throw new Error('No credentials got returned!');
     }
     const params = credentials;
     const url = params.url.replace(/\/$/, '') || null;
@@ -163,7 +175,8 @@ async function directusApiFileRequest(method, path, formData = {}, body = {}, qs
         return responseFile;
     }
     catch (error) {
-        throw new n8n_workflow_1.NodeApiError(this.getNode(), error);
+        //throw new NodeApiError(this.getNode(), error);
+        throw new Error(error);
     }
 }
 exports.directusApiFileRequest = directusApiFileRequest;

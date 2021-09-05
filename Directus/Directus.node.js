@@ -29,10 +29,11 @@ class Directus {
             icon: 'file:directus.svg',
             group: ['transform'],
             version: 1,
-            description: 'Directus description',
+            description: 'Consume Directus API',
+            subtitle: '={{$parameter["operation"] + " : " + $parameter["resource"]}}',
             defaults: {
                 name: 'Directus',
-                color: '#2ECFA8',
+                color: '#2ECFA8'
             },
             inputs: ['main'],
             outputs: ['main'],
@@ -187,6 +188,115 @@ class Directus {
                 ...WebhooksDescription_1.webhooksOperations,
                 ...WebhooksDescription_1.webhooksFields
             ]
+        };
+        this.methods = {
+            loadOptions: {
+                // Get all Collections
+                async getCollections() {
+                    try {
+                        const returnData = [];
+                        const collections = await GenericFunctions_1.directusApiRequest.call(this, 'GET', 'collections');
+                        console.log('1. collections :');
+                        for (const collection of collections.data) {
+                            const name = collection.collection;
+                            const nameInCapital = name.charAt(0).toUpperCase() + name.slice(1);
+                            returnData.push({
+                                name: nameInCapital,
+                                value: name
+                            });
+                        }
+                        return returnData;
+                    }
+                    catch (error) {
+                        //throw new NodeApiError(this.getNode(), error);
+                        throw new Error(error);
+                    }
+                },
+                // Get only user created Collections
+                async getCustomCollections() {
+                    var _a;
+                    try {
+                        const returnData = [];
+                        const collections = await GenericFunctions_1.directusApiRequest.call(this, 'GET', 'collections');
+                        console.log('1. collections :');
+                        for (const collection of collections.data) {
+                            const name = collection.collection;
+                            const nameInCapital = name.charAt(0).toUpperCase() + name.slice(1);
+                            const isSystem = (_a = collection.meta.system) !== null && _a !== void 0 ? _a : false;
+                            if (!isSystem) {
+                                returnData.push({
+                                    name: nameInCapital,
+                                    value: name
+                                });
+                            }
+                        }
+                        return returnData;
+                    }
+                    catch (error) {
+                        //throw new NodeApiError(this.getNode(), error);
+                        throw new Error(error);
+                    }
+                },
+                // Get Relational fields in a collection
+                async getRelationalFields() {
+                    try {
+                        const collection = this.getCurrentNodeParameter('collection');
+                        const returnData = [];
+                        const fields = await GenericFunctions_1.directusApiRequest.call(this, 'GET', `relations/${collection}`);
+                        for (const fieldObject of fields.data) {
+                            //const nameInCapital = field.charAt(0).toUpperCase() + field.slice(1);
+                            returnData.push({
+                                name: fieldObject.field,
+                                value: fieldObject.field
+                            });
+                        }
+                        return returnData;
+                    }
+                    catch (error) {
+                        //throw new NodeApiError(this.getNode(), error);
+                        throw new Error(error);
+                    }
+                },
+                // Get fields in a collection
+                async getFieldsInCollection() {
+                    try {
+                        const collection = this.getCurrentNodeParameter('collection');
+                        const returnData = [];
+                        const fields = await GenericFunctions_1.directusApiRequest.call(this, 'GET', `fields/${collection}`);
+                        for (const fieldObject of fields.data) {
+                            const nameInCapital = fieldObject.field.charAt(0).toUpperCase() + fieldObject.field.slice(1);
+                            returnData.push({
+                                name: nameInCapital,
+                                value: fieldObject.field
+                            });
+                        }
+                        return returnData;
+                    }
+                    catch (error) {
+                        //throw new NodeApiError(this.getNode(), error);
+                        throw new Error(error);
+                    }
+                },
+                // Get User Roles
+                async getRoles() {
+                    try {
+                        const returnData = [];
+                        const roles = await GenericFunctions_1.directusApiRequest.call(this, 'GET', `roles`);
+                        for (const roleObject of roles.data) {
+                            const nameInCapital = roleObject.name.charAt(0).toUpperCase() + roleObject.name.slice(1);
+                            returnData.push({
+                                name: nameInCapital,
+                                value: roleObject.id
+                            });
+                        }
+                        return returnData;
+                    }
+                    catch (error) {
+                        //throw new NodeApiError(this.getNode(), error);
+                        throw new Error(error);
+                    }
+                },
+            }
         };
     }
     async execute() {
@@ -1040,7 +1150,6 @@ class Directus {
                             let temp = responseData;
                             responseData = { result: temp };
                         }
-                        ;
                         //////////////////////////////////
                         let timerLabel = `${resource} | ${operation}`;
                         returnItems.push({ json: responseData });
@@ -1066,7 +1175,6 @@ class Directus {
                             let temp = responseData;
                             responseData = { result: temp };
                         }
-                        ;
                         //////////////////////////////////
                         returnItems.push({ json: responseData });
                     }
@@ -1116,7 +1224,6 @@ class Directus {
                             let temp = responseData;
                             responseData = { result: temp };
                         }
-                        ;
                         //////////////////////////////////
                         let timerLabel = `${resource} | ${operation}`;
                         console.log('Start');
@@ -1160,7 +1267,6 @@ class Directus {
                             let temp = responseData;
                             responseData = { result: temp };
                         }
-                        ;
                         //////////////////////////////////
                         let timerLabel = `${resource} | ${operation}`;
                         console.time(timerLabel);
@@ -1213,7 +1319,6 @@ class Directus {
                             let temp = responseData;
                             responseData = { result: temp };
                         }
-                        ;
                         //////////////////////////////////
                         returnItems.push({ json: responseData });
                     }
@@ -3075,7 +3180,6 @@ class Directus {
                             let temp = responseData;
                             responseData = { result: temp };
                         }
-                        ;
                         //////////////////////////////////
                         let timerLabel = `${resource} | ${operation}`;
                         returnItems.push({ json: responseData });
@@ -3101,7 +3205,6 @@ class Directus {
                             let temp = responseData;
                             responseData = { result: temp };
                         }
-                        ;
                         //////////////////////////////////
                         returnItems.push({ json: responseData });
                     }
@@ -3127,7 +3230,6 @@ class Directus {
                             let temp = responseData;
                             responseData = { result: temp };
                         }
-                        ;
                         //////////////////////////////////
                         let timerLabel = `${resource} | ${operation}`;
                         console.log('Start');
@@ -3162,7 +3264,6 @@ class Directus {
                             let temp = responseData;
                             responseData = { result: temp };
                         }
-                        ;
                         ////////////////////////////////////
                         if (splitIntoItems === true && Array.isArray(responseData)) {
                             responseData.forEach((item, index) => {
@@ -3201,7 +3302,6 @@ class Directus {
                             let temp = responseData;
                             responseData = { result: temp };
                         }
-                        ;
                         //////////////////////////////////
                         returnItems.push({ json: responseData });
                     }
@@ -4889,55 +4989,55 @@ class Directus {
                                 let temp = responseData;
                                 responseData = { result: temp };
                             }
-                        }
-                        //////////////////////////////////
-                        const exportType = (_169 = additionalFields.export) !== null && _169 !== void 0 ? _169 : null;
-                        let binary = {};
-                        if (exportType) {
-                            const binaryPropertyName = additionalFields.binaryPropertyName || 'data';
-                            let fileName = additionalFields.fileName || 'export';
-                            let binaryData, mimeType, fileExtension;
-                            if (exportType == 'json') {
-                                binaryData = Buffer.from(JSON.stringify(response));
-                                mimeType = 'application/json';
-                                fileExtension = 'json';
-                                fileName = `${fileName}.${fileExtension}`;
-                            }
-                            else if (exportType == 'csv') {
-                                binaryData = Buffer.from(response);
-                                mimeType = 'text/csv';
-                                fileExtension = 'csv';
-                                fileName = `${fileName}.${fileExtension}`;
-                            }
-                            else if (exportType == 'xml') {
-                                binaryData = Buffer.from(response);
-                                mimeType = 'application/xml';
-                                fileExtension = 'xml';
-                                fileName = `${fileName}.${fileExtension}`;
-                            }
-                            else {
-                                binaryData = Buffer.alloc(0);
-                                mimeType = '';
-                            }
-                            binary[binaryPropertyName] = await this.helpers.prepareBinaryData(binaryData, fileName, mimeType);
-                        }
-                        //////////////////////////////////
-                        if (splitIntoItems === true && Array.isArray(responseData)) {
-                            responseData.forEach((item, index) => {
-                                if (exportType) {
-                                    returnItems.push({ json: item, binary });
+                            //////////////////////////////////
+                            const exportType = (_169 = additionalFields.export) !== null && _169 !== void 0 ? _169 : null;
+                            let binary = {};
+                            if (exportType) {
+                                const binaryPropertyName = additionalFields.binaryPropertyName || 'data';
+                                let fileName = additionalFields.fileName || 'export';
+                                let binaryData, mimeType, fileExtension;
+                                if (exportType == 'json') {
+                                    binaryData = Buffer.from(JSON.stringify(response));
+                                    mimeType = 'application/json';
+                                    fileExtension = 'json';
+                                    fileName = `${fileName}.${fileExtension}`;
+                                }
+                                else if (exportType == 'csv') {
+                                    binaryData = Buffer.from(response);
+                                    mimeType = 'text/csv';
+                                    fileExtension = 'csv';
+                                    fileName = `${fileName}.${fileExtension}`;
+                                }
+                                else if (exportType == 'xml') {
+                                    binaryData = Buffer.from(response);
+                                    mimeType = 'application/xml';
+                                    fileExtension = 'xml';
+                                    fileName = `${fileName}.${fileExtension}`;
                                 }
                                 else {
-                                    returnItems.push({ json: item });
+                                    binaryData = Buffer.alloc(0);
+                                    mimeType = '';
                                 }
-                            });
-                        }
-                        else {
-                            if (exportType) {
-                                returnItems.push({ json: responseData, binary });
+                                binary[binaryPropertyName] = await this.helpers.prepareBinaryData(binaryData, fileName, mimeType);
+                            }
+                            //////////////////////////////////
+                            if (splitIntoItems === true && Array.isArray(responseData)) {
+                                responseData.forEach((item, index) => {
+                                    if (exportType) {
+                                        returnItems.push({ json: item, binary });
+                                    }
+                                    else {
+                                        returnItems.push({ json: item });
+                                    }
+                                });
                             }
                             else {
-                                returnItems.push({ json: responseData });
+                                if (exportType) {
+                                    returnItems.push({ json: responseData, binary });
+                                }
+                                else {
+                                    returnItems.push({ json: responseData });
+                                }
                             }
                         }
                     }
