@@ -196,7 +196,6 @@ class Directus {
                     try {
                         const returnData = [];
                         const collections = await GenericFunctions_1.directusApiRequest.call(this, 'GET', 'collections');
-                        console.log('1. collections :');
                         for (const collection of collections.data) {
                             const name = collection.collection;
                             const nameInCapital = name.charAt(0).toUpperCase() + name.slice(1);
@@ -218,7 +217,6 @@ class Directus {
                     try {
                         const returnData = [];
                         const collections = await GenericFunctions_1.directusApiRequest.call(this, 'GET', 'collections');
-                        console.log('1. collections :');
                         for (const collection of collections.data) {
                             const name = collection.collection;
                             const nameInCapital = name.charAt(0).toUpperCase() + name.slice(1);
@@ -841,7 +839,6 @@ class Directus {
                         endpoint = `auth/oauth`;
                         let response;
                         response = await GenericFunctions_1.directusApiRequest.call(this, requestMethod, endpoint, body, qs);
-                        console.log(response);
                         if (typeof response != 'object') {
                             responseData = { response };
                         }
@@ -1189,36 +1186,11 @@ class Directus {
                 if (operation === 'list') {
                     try {
                         const collection = this.getNodeParameter('collection', i);
-                        //returnAll = this.getNodeParameter('returnAll', i) as boolean ?? null;
                         requestMethod = 'GET';
                         endpoint = `fields/${collection}`;
                         const splitIntoItems = (_23 = this.getNodeParameter('splitIntoItems', i)) !== null && _23 !== void 0 ? _23 : null;
-                        /*
-                        const additionalFields =
-                            (this.getNodeParameter('additionalFields', i) as IDataObject) ??
-                            null;
-
-                        for (const key of Object.keys(additionalFields)) {
-                            qs[key] = additionalFields[key];
-                        }
-                        */
                         let response;
                         response = await GenericFunctions_1.directusApiRequest.call(this, requestMethod, endpoint, body, qs);
-                        /*
-                        if (returnAll === true) {
-                            qs.limit = -1;
-                        } else {
-                            qs.limit = this.getNodeParameter('limit', i) ? this.getNodeParameter('limit', i) as number : null;
-                        }
-
-                        response = await directusApiRequest.call(
-                            this,
-                            requestMethod,
-                            endpoint,
-                            body,
-                            qs
-                        );
- */
                         responseData = (_24 = response.data) !== null && _24 !== void 0 ? _24 : {};
                         if (['string', 'number', 'boolean'].includes(typeof responseData)) {
                             let temp = responseData;
@@ -1226,26 +1198,15 @@ class Directus {
                         }
                         //////////////////////////////////
                         let timerLabel = `${resource} | ${operation}`;
-                        console.log('Start');
-                        console.time(timerLabel);
                         ////////////////////////////////////
                         if (splitIntoItems === true && Array.isArray(responseData)) {
                             responseData.forEach((item, index) => {
                                 returnItems.push({ json: item });
-                                console.log('1.');
-                                console.log(index);
-                                console.timeLog(timerLabel);
                             });
-                            console.log('2.');
-                            console.timeLog(timerLabel);
                         }
                         else {
                             returnItems.push({ json: responseData });
-                            console.log('3.');
-                            console.timeLog(timerLabel);
                         }
-                        console.log('End');
-                        console.timeEnd(timerLabel);
                     }
                     catch (error) {
                         if (this.continueOnFail()) {
@@ -3232,8 +3193,6 @@ class Directus {
                         }
                         //////////////////////////////////
                         let timerLabel = `${resource} | ${operation}`;
-                        console.log('Start');
-                        console.time(timerLabel);
                         ////////////////////////////////////
                         if (splitIntoItems === true && Array.isArray(responseData)) {
                             responseData.forEach((item, index) => {
@@ -4744,7 +4703,6 @@ class Directus {
                         let response;
                         body = { string: String };
                         response = await GenericFunctions_1.directusApiRequest.call(this, requestMethod, endpoint, body, qs);
-                        console.log({ response });
                         if (typeof response != 'object') {
                             responseData = { response };
                         }
@@ -4807,8 +4765,6 @@ class Directus {
                             string: String,
                         };
                         response = await GenericFunctions_1.directusApiRequest.call(this, requestMethod, endpoint, body, qs);
-                        console.log(typeof response);
-                        console.log(response);
                         if (typeof response != 'object') {
                             responseData = { response };
                         }
@@ -5069,7 +5025,6 @@ class Directus {
                             const url = this.getNodeParameter('url', i);
                             const actions = this.getNodeParameter('actions', i);
                             const collections = this.getNodeParameter('collections', i);
-                            console.log({ name, url, actions, collections });
                             if (typeof actions == 'string') {
                                 body['actions'] = JSON.parse(actions);
                             }
