@@ -85,7 +85,7 @@ async function directusApiAssetRequest(method, path, ID, dataPropertyName, qs = 
         qs,
         uri: `${url}/${path.replace(/^\//, '')}`,
         json: true,
-        encoding: "arrayBuffer",
+        encoding: null, //"arrayBuffer",
     };
     console.log('4. optionsAsset : ', { optionsAsset });
     try {
