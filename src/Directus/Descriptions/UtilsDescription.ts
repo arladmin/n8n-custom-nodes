@@ -234,7 +234,10 @@ export const utilsFields = [
         placeholder: '20',
         default: null,
         description: 'Length of the random string.\n',
-        required: false
+        required: false,
+        typeOptions: {
+          minValue: 1
+        }
       }
     ]
   }

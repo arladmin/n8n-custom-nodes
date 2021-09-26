@@ -404,6 +404,85 @@ export const foldersFields = [
     },
     options: [
       {
+        displayName: 'Aggregate',
+        name: 'aggregate',
+        type: 'fixedCollection',
+        placeholder: 'Add Aggregation Functions',
+        default: '',
+        description: 'Aggregate functions allow you to perform calculations on a set of values, returning a single result.\n',
+        required: false,
+        typeOptions: {
+          multipleValues: true
+        },
+        options: [
+          {
+            name: 'aggregationFunctions',
+            displayName: 'Functions',
+            values: [
+              {
+                displayName: 'Name',
+                name: 'name',
+                type: 'options',
+                default: 'count',
+                options: [
+                  {
+                    name: 'Count',
+                    value: 'count',
+                    description: 'Counts how many items there are'
+                  },
+                  {
+                    name: 'Count Distinct',
+                    value: 'countDistinct',
+                    description: 'Counts how many unique items there are'
+                  },
+                  {
+                    name: 'SUM',
+                    value: 'sum',
+                    description: 'Adds together the values in the given field'
+                  },
+                  {
+                    name: 'SUM Distinct',
+                    value: 'sumDistinct',
+                    description: 'Adds together the unique values in the given field'
+                  },
+                  {
+                    name: 'Average',
+                    value: 'avg',
+                    description: 'Get the average value of the given field'
+                  },
+                  {
+                    name: 'Average Distinct',
+                    value: 'avgDistinct',
+                    description: 'Get the average value of the unique values in the given field'
+                  },
+                  {
+                    name: 'Minimum',
+                    value: 'min',
+                    description: 'Return the lowest value in the field'
+                  },
+                  {
+                    name: 'Maximum',
+                    value: 'max',
+                    description: 'Return the highest value in the field'
+                  }
+                ],
+                description: 'Aggregation Function'
+              },
+              {
+                displayName: 'Field',
+                name: 'value',
+                type: 'options',
+                default: '',
+                description: 'Field to apply aggregation on',
+                typeOptions: {
+                  loadOptionsMethod: 'getFieldsInCollection'
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
         displayName: 'Binary Property for Export Data',
         name: 'binaryPropertyName',
         type: 'string',
@@ -475,6 +554,15 @@ export const foldersFields = [
         typeOptions: {
           alwaysOpenEditWindow: true
         }
+      },
+      {
+        displayName: 'Group By',
+        name: 'groupBy',
+        type: 'string',
+        placeholder: 'author,year(publish_date)',
+        default: null,
+        description: 'Grouping allows for running the aggregation functions based on a shared value. This allows for things like "Average rating per month" or "Total sales of items in the jeans category".\n',
+        required: false
       },
       {
         displayName: 'Meta',
