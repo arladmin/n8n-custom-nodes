@@ -4,6 +4,7 @@ exports.directusApiFileRequest = exports.directusApiAssetRequest = exports.valid
 async function directusApiRequest(method, path, body = {}, qs = {}, uri, option = {}) {
     // tslint:disable-line:no-any
     const credentials = (await this.getCredentials('directusApi'));
+    console.log('2. credentials : ', { credentials });
     if (credentials === undefined) {
         /*
         throw new NodeOperationError(
@@ -28,7 +29,7 @@ async function directusApiRequest(method, path, body = {}, qs = {}, uri, option 
     };
     try {
         options.headers['Authorization'] = accessToken ? `Bearer ${accessToken}` : "";
-        console.log('options : ', { options });
+        console.log('3. options : ', { options });
         return await this.helpers.request(options);
     }
     catch (error) {
@@ -74,7 +75,7 @@ async function directusApiAssetRequest(method, path, ID, dataPropertyName, qs = 
         uri: `${url}/files/${ID}`,
         json: true
     };
-    console.log('optionsFile : ', { optionsFile });
+    console.log('3. optionsFile : ', { optionsFile });
     const optionsAsset = {
         headers: {
             'Content-Type': 'application/json',
@@ -86,7 +87,7 @@ async function directusApiAssetRequest(method, path, ID, dataPropertyName, qs = 
         json: true,
         encoding: null, //"arrayBuffer",
     };
-    console.log('optionsAsset : ', { optionsAsset });
+    console.log('4. optionsAsset : ', { optionsAsset });
     try {
         const resFile = await this.helpers.request(optionsFile);
         const file = resFile.data;
